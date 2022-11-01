@@ -1,0 +1,26 @@
+{
+  "name": "bookinglabtest_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unitedhandstechnologies/bookinglabtest_backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/unitedhandstechnologies/bookinglabtest_backend/issues"
+  },
+  "homepage": "https://github.com/unitedhandstechnologies/bookinglabtest_backend#readme",
+  "dependencies": {
+    "npx": "^10.2.2",
+    "pg": "^8.8.0",
+    "sequelize": "^6.25.3",
+    "sequelize-cli": "^6.5.2"
+  }
+}

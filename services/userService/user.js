@@ -3,6 +3,7 @@ const exception = require("../../constants/exception.json");
 
 const createUser = async (req, res) => {
     try {
+      const now = new Date().toISOString();
       const user = req.body;
       const existMobileNumber = await db.query(
         `SELECT * FROM users WHERE mobile_number = $1;`,
@@ -15,7 +16,7 @@ const createUser = async (req, res) => {
           .send({message:exception.alreadyExist});
           
       const newUser = await db.query(
-        `INSERT INTO users (mobile_number) VALUES('${user.mobile_number}') RETURNING *`
+        `INSERT INTO users (mobile_number,created_at) VALUES('${user.mobile_number}','${now}') RETURNING *`
       );
   
       return res.status(201).send({user:newUser.rows[0]});
@@ -25,3 +26,5 @@ const createUser = async (req, res) => {
       return res.status(500).send({Error:err});
     }
   };
+
+  module.exports ={ createUser};

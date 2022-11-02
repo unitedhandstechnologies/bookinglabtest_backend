@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const circleService = require("../../services/Admin Service/circleService");
+const circleService = require("../../services/adminService/circleService");
 
 router.post(
   "/api/circle",

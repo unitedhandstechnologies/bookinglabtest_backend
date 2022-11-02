@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 //userRouters
 const userRouter = require("./routes/UserServiceRoute/userRouter");
 const circleRouter = require("./routes/adminServiceRoute/circleRoute");
+const circlePincodeRouter = require("./routes/adminServiceRoute/circlePincodeMappingRoute");
 const testRouter = require("./routes/adminServiceRoute/testDetailRoutes");
 
 const cors = require("cors");
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //userRouters
 app.use("/", userRouter);
 app.use("/", circleRouter);
+app.use("/", circlePincodeRouter)
 app.use("/",testRouter);
 
 app.use(function (err, req, res, next) {

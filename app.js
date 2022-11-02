@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 
 //userRouters
 const userRouter = require("./routes/UserServiceRoute/userRouter");
+const circleRouter = require("./routes/AdminServiceRoute/circleRoute");
+
 
 const cors = require("cors");
 const db = require("./config/dbConfig");
@@ -27,6 +29,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //userRouters
 app.use("/", userRouter);
+app.use("/", circleRouter);
+
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

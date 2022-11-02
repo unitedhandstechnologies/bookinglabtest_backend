@@ -21,7 +21,7 @@
  router.patch(
     "/api/updateTest/:id",
     testDetailService.updateTest
- )
+ );
  router.delete(
     "/api/deleteTest/:id",
     testDetailService.deleteTest

@@ -19,7 +19,7 @@ const createNewTest = async (req, res) => {
             `INSERT INTO test_details (test_name, amount, fasting_required, description, created_at, updated_at) VALUES('${newTestDetails.test_name}','${newTestDetails.amount}','${newTestDetails.fasting_required}','${newTestDetails.description}','${now}','${now}') RETURNING *`
           );
 
-          return res.status(201).send(addTestDetail.rows[0]);
+          return res.status(201).send(addTestDetail.rows);
 
         } catch (err) {
             console.log(err);
@@ -39,7 +39,7 @@ const createNewTest = async (req, res) => {
                     `SELECT * FROM test_details`
                 );
                 return res.status(200)
-                .send(newTest.rows[0]);
+                .send(newTest.rows);
             } catch (err) {
                 console.log(err);
                 return res.status(500).send(err);

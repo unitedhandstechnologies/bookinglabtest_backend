@@ -13,6 +13,9 @@ const testRouter = require("./routes/adminServiceRoute/testDetailRoutes");
 const slotRouter = require("./routes/adminServiceRoute/slotRoute");
 const adminServiceRouter = require("./routes/adminServiceRoute/adminServiceRoute");
 
+//vehicleRouter 
+const vehicleRouter = require("./routes/vehcileServiceRoute/vehcileRouter");
+
 const cors = require("cors");
 const db = require("./config/dbConfig");
 
@@ -39,6 +42,10 @@ app.use("/", employeeRouter);
 app.use("/",testRouter);
 app.use("/",slotRouter);
 app.use("/",adminServiceRouter);
+
+//vehicleRouter
+app.use("/", vehicleRouter);
+
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

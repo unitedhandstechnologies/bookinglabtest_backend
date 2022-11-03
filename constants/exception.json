@@ -5,5 +5,9 @@
     "adminNotFound": "Admin Not With This Given Id",
     "accessDenied":"Access denied.No token provided",
     "invalidToken":"Invalid Token",
-    "accessHaveNot":"Access Denied.You Don't have permission!"
+    "accessHaveNot":"Access Denied.You Don't have permission!",
+    "vehcilesNotFoundWithThisId":"vehcile Not Found With This Id",
+    "existVehicle":"Already Have This Vehicle Name In This List",
+    "delete":"deleted"
+    
 }

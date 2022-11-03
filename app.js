@@ -12,6 +12,7 @@ const testRouter = require("./routes/adminServiceRoute/testDetailRoutes");
 const slotRouter = require("./routes/adminServiceRoute/slotRoute");
 const cors = require("cors");
 const db = require("./config/dbConfig");
+const notificationRouter = require("./routes/adminServiceRoute/notificationRoute");
 
 db.connect();
 
@@ -34,6 +35,7 @@ app.use("/", circleRouter);
 app.use("/", circlePincodeRouter)
 app.use("/",testRouter);
 app.use("/",slotRouter);
+app.use("/",notificationRouter);
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

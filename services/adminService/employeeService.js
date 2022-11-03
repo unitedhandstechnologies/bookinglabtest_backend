@@ -102,14 +102,22 @@ const updateEmployee = async (req, res) => {
     });
     }
 
+    const updateName = Employee.employee_name == null ? existEmployee.rows[0].employee_name : Employee.employee_name;
+    const updateQualification = Employee.qualification == null ? existEmployee.rows[0].qualification : Employee.qualification;
+    const updateAge = Employee.age == null ? existEmployee.rows[0].age : Employee.age;
+    const updateMobileNumber = Employee.mobile_number == null ? existEmployee.rows[0].mobile_number : Employee.mobile_number;
+    const updateEmail = Employee.email == null ? existEmployee.rows[0].email : Employee.email;
+    const updateAddress = Employee.address == null ? existEmployee.rows[0].address : Employee.address;
+    const updateWorkStatus = Employee.work_status == null ? existEmployee.rows[0].work_status : Employee.work_status;
+
     const updateQuery = `UPDATE employees SET 
-                         employee_name = '${Employee.employee_name}',
-                         qualification= '${Employee.qualification}',
-                         age = '${Employee.age}',
-                         mobile_number='${Employee.mobile_number}',
-                         email ='${Employee.email}',
-                         address ='${Employee.address}',
-                         work_status = '${Employee.work_status}', 
+                         employee_name = '${updateName}',
+                         qualification= '${updateQualification}',
+                         age = '${updateAge}',
+                         mobile_number='${updateMobileNumber}',
+                         email ='${updateEmail}',
+                         address ='${updateAddress}',
+                         work_status = '${updateWorkStatus}', 
                          updated_at = '${now}'
                          WHERE id = ${req.params.id}  RETURNING *`;
 

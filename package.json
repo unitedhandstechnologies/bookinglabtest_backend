@@ -22,12 +22,14 @@
     "body-parser": "^1.20.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jade": "^1.11.0",
+    "jsonwebtoken": "^8.5.1",
     "npx": "^10.2.2",
     "pg": "^8.8.0",
     "sequelize": "^6.25.3",
     "sequelize-cli": "^6.5.2"
-  },
-  "devDependencies": {}
+  }
 }

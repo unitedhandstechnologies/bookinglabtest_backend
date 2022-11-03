@@ -1,3 +1,9 @@
 {
-    "alreadyExist":"This Mobile number is already exist"
+    "alreadyExist":"This Mobile number is already exist",
+    "existAdmin": "This UserName Already Exists",
+    "invalid":"Invalid UserName or  Password!",
+    "adminNotFound": "Admin Not With This Given Id",
+    "accessDenied":"Access denied.No token provided",
+    "invalidToken":"Invalid Token",
+    "accessHaveNot":"Access Denied.You Don't have permission!"
 }

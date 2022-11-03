@@ -7,7 +7,7 @@ router.post(
   circleService.createCircle
 );
 router.get(
-  "/api/circles",
+  "/api/circle",
   circleService.getAllCircles
 );
 router.get(

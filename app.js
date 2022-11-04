@@ -14,7 +14,7 @@ const slotRouter = require("./routes/adminServiceRoute/slotRoute");
 const adminServiceRouter = require("./routes/adminServiceRoute/adminServiceRoute");
 const userNotificationRouter = require("./routes/userServiceRoute/userNotificationRoutes");
 //vehicleRouter 
-const vehicleRouter = require("./routes/vehcileServiceRoute/vehcileRouter");
+const vehicleRouter = require("./routes/AdminServiceRoute/vehcileRouter");
 
 const cors = require("cors");
 const db = require("./config/dbConfig");

@@ -34,7 +34,7 @@ const getAllVehicle  = async(req,res) =>{
             .send({statusCode:400,message:enMessage.failure,vehicle:exception.vehcilesNotFoundWithThisId});
         }
     let vehicles= await db.query(
-        `SELECT *,(SELECT ARRAY(SELECT  test_details_id FROM vehicle_test_details WHERE vehicle_id = vehicles.id))AS test_details_id FROM vehicles ORDER BY vehicles.id`);
+        `SELECT *,(SELECT ARRAY(SELECT test_details_id FROM vehicle_test_details  WHERE vehicle_id = vehicles.id))AS test_details_id FROM vehicles ORDER BY vehicles.id`);
         return res.status(200).send({statusCode:200,message:enMessage.success,vehicle:vehicles.rows});
     } 
     catch (err){
@@ -77,14 +77,14 @@ const getAllVehicle  = async(req,res) =>{
                                  WHERE id = ${req.params.id} RETURNING *`;
         const vehicleResult = await db.query(updateQuery);  
         await db.query(
-          `DELETE FROM vehicle_test_details WHERE test_details_id = ${req.params.id}`);
+          `DELETE FROM vehicle_test_details WHERE vehicle_id = ${req.params.id}`);
         const testDetails = await db.query(
           `SELECT * FROM test_details WHERE id IN (${VehicleRequest.test_details_id})`);
         let vehicleList = [];
         for(var i = 0 ; i < testDetails.rowCount; i++){
           const result = await db.query(
           `INSERT INTO vehicle_test_details (vehicle_id,test_details_id
-            ,test_name) VALUES ('${testDetails.rows[0].id}',
+            ,test_name) VALUES ('${existVehicle.rows[0].id}',
           '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}') RETURNING *`);
           vehicleList.push(result.rows[0].test_details_id);
         }
@@ -117,7 +117,7 @@ const getAllVehicle  = async(req,res) =>{
                                         WHERE id       =  ${req.params.id} RETURNING *`;
           const  vehicleResult = await db.query(updateQuery);
         await db.query(
-          `DELETE FROM vehicle_test_details WHERE test_details_id = ${req.params.id}`
+          `DELETE FROM vehicle_test_details WHERE vehicle_id = ${req.params.id}`
         );
         const testDetails = await db.query(
           `SELECT * FROM test_details WHERE id IN (${vehicleRequest.test_details_id})`);
@@ -126,7 +126,7 @@ const getAllVehicle  = async(req,res) =>{
       {
           const result = await db.query(
           `INSERT INTO vehicle_test_details (vehicle_id,test_details_id
-            ,test_name) VALUES ('${testDetails.rows[0].id}',
+            ,test_name) VALUES ('${existVehicle.rows[0].id}',
           '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}') RETURNING *`);
           vehicleList.push(result.rows[0].test_details_id);
         }

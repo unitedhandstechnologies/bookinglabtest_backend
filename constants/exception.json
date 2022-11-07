@@ -1,4 +1,5 @@
 {
+    "alreadyAddressExist":"Already Address Is Exist",
     "alreadyExist":"This Mobile number is already exist",
     "existAdmin": "This UserName Already Exists",
     "invalid":"Invalid UserName or  Password!",
@@ -8,6 +9,6 @@
     "accessHaveNot":"Access Denied.You Don't have permission!",
     "vehcilesNotFoundWithThisId":"vehcile Not Found With This Id",
     "existVehicle":"Already Have This Vehicle Name In This List",
-    "delete":"deleted"
-    
+    "delete":"Deleted",
+    "addressNotFound":"Address Not Found With this Id "
 }

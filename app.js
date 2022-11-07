@@ -22,6 +22,9 @@ const cors = require("cors");
 const db = require("./config/dbConfig");
 const notificationRouter = require("./routes/adminServiceRoute/notificationRoute");
 
+// addressRouter
+const addressRouter = require("./routes/userServiceRoute/addressRoute");
+
 db.connect();
 
 const app = express();
@@ -51,6 +54,8 @@ app.use("/", vehicleRouter);
 app.use("/",discountPercentageRouter);
 app.use("/",discountAmountRouter);
 app.use("/",orderRouter);
+//AddressRouter
+app.use("/", addressRouter);
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

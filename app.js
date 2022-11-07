@@ -5,7 +5,8 @@ var bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 //userRouters
-const userRouter = require("./routes/UserServiceRoute/userRouter");
+const userRouter = require("./routes/userServiceRoute/userRouter");
+const userDetailsRouter = require("./routes/userServiceRoute/userDetailsRouter");
 const circleRouter = require("./routes/adminServiceRoute/circleRoute");
 const circlePincodeRouter = require("./routes/adminServiceRoute/circlePincodeMappingRoute");
 const employeeRouter = require("./routes/adminServiceRoute/employeeRoute");
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //userRouters
 app.use("/", userRouter);
+app.use("/", userDetailsRouter);
 app.use("/", circleRouter);
 app.use("/", circlePincodeRouter);
 app.use("/", employeeRouter);

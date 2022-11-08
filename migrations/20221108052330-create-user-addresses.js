@@ -2,11 +2,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('addresses', {
+    await queryInterface.createTable('user_addresses', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      user_id:{
         type: Sequelize.INTEGER
       },
       address_line1: {
@@ -27,9 +30,6 @@ module.exports = {
       pincode: {
         type: Sequelize.STRING
       },
-      mobile_number: {
-        type: Sequelize.STRING
-      },
       map_location: {
         type: Sequelize.STRING
       },
@@ -44,6 +44,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('addresses');
+    await queryInterface.dropTable('user_addresses');
   }
 };

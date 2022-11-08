@@ -6,15 +6,29 @@ const createVehicle = async(req,res) => {
   try{
       const now  = new Date().toISOString();
       const newVehicle = req.body;
-      const vehicle = await db.query(`INSERT INTO vehicles(vehicle_number,vehicle_name,vehicle_type,description,created_at,updated_at) VALUES ('${newVehicle.vehicle_number}','${newVehicle.vehicle_name}','${newVehicle.vehicle_type}','${newVehicle.description}','${now}','${now}') RETURNING *`);
+     const isVehcilesExist = await db.query(`SELECT * FROM vehicles WHERE vehicle_number = $1;`,
+     [newVehicle.vehicle_number]
+     );
+     if(isVehcilesExist.rowCount != 0 )
+     {
+      return res
+      .status(400)
+      .send({statusCode:400,message:enMessage.failure,vehicle:exception.existVehicle})
+     }
+      const vehicle = await db.query(
+        `INSERT INTO vehicles(vehicle_number,vehicle_name,vehicle_type,description,created_at,updated_at) VALUES 
+        ('${newVehicle.vehicle_number}','${newVehicle.vehicle_name}','${newVehicle.vehicle_type}','${newVehicle.description}','${now}','${now}') 
+        RETURNING *`
+      );
       const testDetails = await db.query(
-          `SELECT * FROM test_details WHERE id IN (${newVehicle.test_details_id})`);
+            `SELECT * FROM test_details WHERE id IN (${newVehicle.test_details_id})`);
       let vehicleList = [];
       for(var i = 0 ; i < testDetails.rowCount; i++)
       {
           const result = await db.query(
               `INSERT INTO vehicle_test_details (vehicle_id,test_details_id,test_name) VALUES ('${vehicle.rows[0].id}',
-              '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}') RETURNING *`);
+              '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}')
+          RETURNING *`);
           vehicleList.push(result.rows[0].test_details_id);
           }   
       return res.status(201).send({statusCode:201,message:enMessage.success,vehicle:vehicle.rows[0], test_details_id:vehicleList});
@@ -27,12 +41,6 @@ const createVehicle = async(req,res) => {
 };
 const getAllVehicle  = async(req,res) =>{
     try {
-        const isVehcilesExist = req.query;
-        if (isVehcilesExist.rowCount == 0){
-            return res
-            .status(400)
-            .send({statusCode:400,message:enMessage.failure,vehicle:exception.vehcilesNotFoundWithThisId});
-        }
     let vehicles= await db.query(
         `SELECT *,(SELECT ARRAY(SELECT test_details_id FROM vehicle_test_details  WHERE vehicle_id = vehicles.id))AS test_details_id FROM vehicles ORDER BY vehicles.id`);
         return res.status(200).send({statusCode:200,message:enMessage.success,vehicle:vehicles.rows});
@@ -153,7 +161,8 @@ const getAllVehicle  = async(req,res) =>{
               .status(404)
               .send({ statusCode: 404, message:enMessage.failure,vehicle:exception.vehcilesNotFoundWithThisId });
           }
-          await db.query(`DELETE FROM vehicles WHERE id = ${req.params.id}`);
+          await db.query(
+            `DELETE FROM vehicles WHERE id = ${req.params.id}`);
           await db.query(
             `DELETE FROM vehicle_test_details WHERE test_details_id = ${req.params.id}`
           );

@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     vehicle_number: DataTypes.STRING,
     vehicle_name: DataTypes.STRING,
     vehicle_type: DataTypes.STRING,
-    test_details: Sequelize.ARRAY(Sequelize.INTEGER),
   }, {
     sequelize,
     modelName: 'vehicles',

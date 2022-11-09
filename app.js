@@ -23,7 +23,8 @@ const orderRouter = require("./routes/userServiceRoute/orderRoute");
 const cors = require("cors");
 const db = require("./config/dbConfig");
 const notificationRouter = require("./routes/adminServiceRoute/notificationRoute");
-
+const sampleRouter = require("./routes/AdminServiceRoute/sampleRoute");
+const resultRouter = require("./routes/AdminServiceRoute/resultRoute");
 
 db.connect();
 
@@ -56,7 +57,8 @@ app.use("/", vehicleRouter);
 app.use("/",discountPercentageRouter);
 app.use("/",discountAmountRouter);
 app.use("/",orderRouter);
-
+app.use("/",sampleRouter);
+app.use("/",resultRouter);
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

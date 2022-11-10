@@ -52,7 +52,6 @@ app.use("/",testRouter);
 app.use("/",slotRouter);
 app.use("/",notificationRouter);
 app.use("/",userNotificationRouter);
-//vehicleRouter
 app.use("/", vehicleRouter);
 app.use("/",discountPercentageRouter);
 app.use("/",discountAmountRouter);

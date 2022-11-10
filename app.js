@@ -9,23 +9,22 @@ const userRouter = require("./routes/userServiceRoute/userRouter");
 const userDetailsRouter = require("./routes/userServiceRoute/userDetailsRouter");
 const circleRouter = require("./routes/adminServiceRoute/circleRoute");
 const circlePincodeRouter = require("./routes/adminServiceRoute/circlePincodeMappingRoute");
-const circleVehicleRouter = require("./routes/adminServiceRoute/circleVehicleRoute");
 const employeeRouter = require("./routes/adminServiceRoute/employeeRoute");
 const testRouter = require("./routes/adminServiceRoute/testDetailRoutes");
 const slotRouter = require("./routes/adminServiceRoute/slotRoute");
 const adminServiceRouter = require("./routes/adminServiceRoute/adminServiceRoute");
 const userNotificationRouter = require("./routes/userServiceRoute/userNotificationRoutes");
+const userAddressRouter = require("./routes/userServiceRoute/userAddressRoute")
 //vehicleRouter 
-const vehicleRouter = require("./routes/adminServiceRoute/vehicleRouter");
+const vehicleRouter = require("./routes/adminServiceRoute/vehcileRouter");
 const discountPercentageRouter = require("./routes/userServiceRoute/discountPercentageRoute");
 const discountAmountRouter = require("./routes/userServiceRoute/discountAmountRoute");
 const orderRouter = require("./routes/userServiceRoute/orderRoute");
 const cors = require("cors");
 const db = require("./config/dbConfig");
 const notificationRouter = require("./routes/adminServiceRoute/notificationRoute");
-
-// addressRouter
-const addressRouter = require("./routes/userServiceRoute/addressRoute");
+const sampleRouter = require("./routes/AdminServiceRoute/sampleRoute");
+const resultRouter = require("./routes/AdminServiceRoute/resultRoute");
 
 db.connect();
 
@@ -45,9 +44,9 @@ app.use(express.static(path.join(__dirname, "public")));
 //userRouters
 app.use("/", userRouter);
 app.use("/", userDetailsRouter);
+app.use("/", userAddressRouter);
 app.use("/", circleRouter);
 app.use("/", circlePincodeRouter);
-app.use("/", circleVehicleRouter);
 app.use("/", employeeRouter);
 app.use("/",testRouter);
 app.use("/",slotRouter);
@@ -58,8 +57,8 @@ app.use("/", vehicleRouter);
 app.use("/",discountPercentageRouter);
 app.use("/",discountAmountRouter);
 app.use("/",orderRouter);
-//AddressRouter
-app.use("/", addressRouter);
+app.use("/",sampleRouter);
+app.use("/",resultRouter);
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

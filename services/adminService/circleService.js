@@ -8,13 +8,13 @@ const createCircle = async (req, res) => {
         
         const checkCircle = await db.query(`SELECT * FROM circles WHERE  circle_name = '${Circle.circle_name}'`);
         if (checkCircle.rowCount != 0) {
-         return res.status(400).send({ statusCode: 400, message:"Pincode already exist"
+         return res.status(400).send({ statusCode: 400, message:"Circle already exist"
            // circle: exception.existCircle 
         });
         }    
         const newCircle = await db.query(
-          `INSERT INTO circles (circle_name,description,created_at,updated_at) 
-           VALUES ('${Circle.circle_name}','${Circle.description}','${now}','${now}')
+          `INSERT INTO circles (circle_name,description,created_at) 
+           VALUES ('${Circle.circle_name}','${Circle.description}','${now}')
             RETURNING *`);
             return res.status(201).send({statusCode:201, circle:newCircle.rows[0]});
     } catch (err) {
@@ -28,6 +28,10 @@ const getAllCircles = async (req, res) => {
         const getCircle = await db.query(
             `SELECT * FROM circles`
         );
+        if (getCircle.rowCount == 0) {
+            return res.status(404).send({ status: 404, message:"No data found"
+//en.CircleNotFoundWithId 
+})}
         return res.status(200).send({ statusCode: 200, Circles: getCircle.rows });
     } catch (err) {
         console.log(err);
@@ -41,7 +45,11 @@ const getCircleById = async (req, res) => {
             `SELECT * FROM circles WHERE id = $1`,
             [req.params.id]
         );
-        return res.status(200).send({ statusCode: 200,message:"There is no circle found with this id", Circle: getCircle.rows[0] });
+        if (getCircle.rowCount == 0) {
+            return res.status(404).send({ status: 404, message:"Circle Not Found With this Id"
+//en.CircleNotFoundWithId 
+})}
+        return res.status(200).send({ statusCode: 200, Circle: getCircle.rows[0] });
     } catch (err) {
         console.log(err);
 
@@ -91,10 +99,12 @@ const updateCircle = async (req, res) => {
       // en.circleNotFound 
     });
     }
+    const updateCircleName = Circle.circle_name == null ? existCircle.rows[0].circle_name :Circle.circle_name;
+    const updateDescription = Circle.description == null ? existCircle.rows[0].description : Circle.description;
 
     const updateQuery = `UPDATE circles SET 
-                         circle_name = '${Circle.circle_name}',
-                         description = '${Circle.description}', 
+                         circle_name = '${updateCircleName}',
+                         description = '${updateDescription}', 
                          updated_at = '${now}'
                          WHERE id = ${req.params.id}  RETURNING *`;
 

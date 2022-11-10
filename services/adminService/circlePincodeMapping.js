@@ -33,6 +33,11 @@ const getAllPincodes = async (req, res) => {
         const getPincode = await db.query(
             `SELECT * FROM pincodes`
         );
+        if (getPincode.rowCount == 0) {
+            return res.status(404).send({ status: 404, message:"No data found"
+//en.pincodeNotFoundWithId 
+});
+        }
         return res.status(200).send({ statusCode: 200, pincodes: getPincode.rows });
     } catch (err) {
         console.log(err);
@@ -50,6 +55,29 @@ const getPincodeById = async (req, res) => {
             return res.status(404).send({ statusCode: 404, message:"There is no pincode found with this id", });
           }
         return res.status(200).send({ statusCode: 200, pincode: getPincode.rows[0] });
+   
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).send(err);
+    }
+};
+
+const getPincodesInCircle = async (req, res) => {
+    try {
+        const getCircle = await db.query(
+            `SELECT * FROM pincodes WHERE circle_id = $1`,
+            [req.params.circle_id]
+        );
+        if (getCircle.rowCount == 0) {
+            return res.status(404).send({ statusCode: 404, message:"Circle Not found with this id" });
+          }
+        
+        if (getCircle.rowCount == 0) {
+            return res.status(404).send({ statusCode: 404, message:"There are no pincodes found in this circle", });
+          }
+        return res.status(200).send({ statusCode: 200, Pincodes: getCircle.rows });
+   
     } catch (err) {
         console.log(err);
 
@@ -138,6 +166,7 @@ module.exports = {
     createPincode,
     getAllPincodes,
     getPincodeById,
+    getPincodesInCircle,
     replacePincode,
     updatePincode,
     deletePincode,

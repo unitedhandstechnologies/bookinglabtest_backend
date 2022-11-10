@@ -11,8 +11,12 @@ router.get(
   circlePincodeService.getAllPincodes
 );
 router.get(
-  "/api/circlePincode/:id",
+  "/api/circlePincode/pincode/:id",
   circlePincodeService.getPincodeById
+);
+router.get(
+  "/api/circlePincode/circle/:circle_id",
+  circlePincodeService.getPincodesInCircle
 );
 router.put(
   "/api/circlePincode/:id",

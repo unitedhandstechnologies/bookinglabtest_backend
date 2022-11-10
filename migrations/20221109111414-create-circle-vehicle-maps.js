@@ -1,30 +1,32 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('circles', {
+    await queryInterface.createTable('circle_vehicle_maps', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      circle_name: {
+      circle_id: {
+        type: Sequelize.INTEGER
+      },
+      vehicles: {
+        type: Sequelize.INTEGER
+      },
+      vehicle_name: {
         type: Sequelize.STRING
       },
-      description: {
+      vehicle_type: {
         type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      updated_at: {
-        allowNull: true,
-        type: Sequelize.DATE
-      }
+      }      
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('circles');
+    await queryInterface.dropTable('circle_vehicle_maps');
   }
 };

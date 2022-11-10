@@ -16,7 +16,7 @@ const adminServiceRouter = require("./routes/adminServiceRoute/adminServiceRoute
 const userNotificationRouter = require("./routes/userServiceRoute/userNotificationRoutes");
 const userAddressRouter = require("./routes/userServiceRoute/userAddressRoute")
 //vehicleRouter 
-const vehicleRouter = require("./routes/adminServiceRoute/vehcileRouter");
+const vehicleRouter = require("./routes/adminServiceRoute/vehicleRouter");
 const discountPercentageRouter = require("./routes/userServiceRoute/discountPercentageRoute");
 const discountAmountRouter = require("./routes/userServiceRoute/discountAmountRoute");
 const orderRouter = require("./routes/userServiceRoute/orderRoute");

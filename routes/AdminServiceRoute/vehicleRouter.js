@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const vehicleService = require("../../services/adminService/vehicle");
+const vehicleService = require("../../services/adminService/vehicleService");
 
 router.post("/api/vehicle",vehicleService.createVehicle);
 router.get("/api/getAllVehicle",vehicleService.getAllVehicle);

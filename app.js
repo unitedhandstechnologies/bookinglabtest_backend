@@ -15,6 +15,8 @@ const testRouter = require("./routes/adminServiceRoute/testDetailRoutes");
 const slotRouter = require("./routes/adminServiceRoute/slotRoute");
 const adminServiceRouter = require("./routes/adminServiceRoute/adminServiceRoute");
 const userNotificationRouter = require("./routes/userServiceRoute/userNotificationRoutes");
+const userAddressRouter = require("./routes/userServiceRoute/userAddressRoute");
+const vehicleEmployeeMappingRouter = require("./routes/AdminServiceRoute/vehicleEmployeeMappingRoute");
 //vehicleRouter 
 const vehicleRouter = require("./routes/adminServiceRoute/vehicleRouter");
 const discountPercentageRouter = require("./routes/userServiceRoute/discountPercentageRoute");
@@ -23,9 +25,6 @@ const orderRouter = require("./routes/userServiceRoute/orderRoute");
 const cors = require("cors");
 const db = require("./config/dbConfig");
 const notificationRouter = require("./routes/adminServiceRoute/notificationRoute");
-
-// addressRouter
-const addressRouter = require("./routes/userServiceRoute/addressRoute");
 
 db.connect();
 
@@ -53,13 +52,14 @@ app.use("/",testRouter);
 app.use("/",slotRouter);
 app.use("/",notificationRouter);
 app.use("/",userNotificationRouter);
+app.use("/",vehicleEmployeeMappingRouter)
 //vehicleRouter
 app.use("/", vehicleRouter);
 app.use("/",discountPercentageRouter);
 app.use("/",discountAmountRouter);
 app.use("/",orderRouter);
 //AddressRouter
-app.use("/", addressRouter);
+app.use("/",userAddressRouter);
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

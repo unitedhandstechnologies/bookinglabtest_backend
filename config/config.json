@@ -1,21 +1,21 @@
 {
   "development": {
     "username": "postgres",
-    "password": "Assar.31",
+    "password": "root",
     "database": "mobile_labtest_db",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
-    "password": "Assar.31",
+    "password": "root",
     "database": "mobile_labtest_db",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
-    "password": "Assar.31",
+    "password": "root",
     "database": "mobile_labtest_db",
     "host": "127.0.0.1",
     "dialect": "postgres"

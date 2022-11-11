@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const discountPercentageService = require("../../services/userService/discountPercentageService");
+const discountPercentageService = require("../../services/adminService/discountPercentageService");
 
 router.post(
     "/api/createPercentage",
@@ -12,7 +12,7 @@ router.post(
  );
  router.get(
     "/api/getPercentageById/:id",
-    discountPercentageService.getPercentById
+    discountPercentageService.getPercentageById
  );
  router.put(
     "/api/replacePercentage/:id",

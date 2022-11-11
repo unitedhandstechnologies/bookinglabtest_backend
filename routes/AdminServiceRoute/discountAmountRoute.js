@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const discountAmountService = require("../../services/userService/discountAmountService");
+const discountAmountService = require("../../services/adminService/discountAmountService");
 
 router.post(
     "/api/createAmount",

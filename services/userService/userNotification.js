@@ -65,9 +65,7 @@ const deleteUserNotification = async (req, res) => {
         );
 
         if (isNotificationExist.rowCount == 0) {
-            return res.status(404).send({ status: 404, message:"There is no user found with this id"
- 
-});
+            return res.status(404).send({ status: 404, message:"There is no user found with this id"});
         }
         await db.query(`DELETE FROM user_notifications WHERE id = ${req.params.id}`);
         return res.status(204).send({ status: 204, message:"Notification Deleted" 

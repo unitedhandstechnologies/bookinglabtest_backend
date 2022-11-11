@@ -24,6 +24,6 @@ const express = require("express");
  );
  router.delete(
     "/api/deleteSlot/:id",
-    slotRoute.deletSlot
+    slotRoute.deleteSlot
  );
  module.exports = router;

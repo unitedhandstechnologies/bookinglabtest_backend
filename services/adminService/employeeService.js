@@ -23,10 +23,10 @@ const createEmployee = async (req, res) => {
     }
 };
 
-const getAllEmployees = async (res) => {
+const getAllEmployees = async (req,res) => {
     try {
         const getEmployee = await db.query(
-            `SELECT * FROM employees`
+            `SELECT * FROM employees ORDER BY id`
         );
         if (getEmployee.rowCount == 0) {
             return res.status(404).send({ status: 404, message:"No data found"
@@ -36,8 +36,8 @@ const getAllEmployees = async (res) => {
     } catch (err) {
         console.log(err);
         return res.status(500).send(err);
-    }
-};
+      }
+    };
 
 const getEmployeeById = async (req, res) => {
     try {

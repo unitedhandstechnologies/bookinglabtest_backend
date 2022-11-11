@@ -17,5 +17,5 @@
     "employeeNotFound":"Employee Not Found With This Id",
     "employeeExist":"Employee Already Exist",
     "getVehicleMapping":"Vehcile Employee Mapping Not",
-    "employeeVehicleMapping":"Vehcile Employee Mapping Not Found With this Id"
+    "employeeAssigned":"Already Employee Assigned this Vehicle Id  please Assign Another Vehicle Id"
 }

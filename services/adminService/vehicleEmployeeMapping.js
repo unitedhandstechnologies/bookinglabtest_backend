@@ -13,16 +13,16 @@ const createEmployeeVehicleMapping = async (req,res) =>{
         {
             res
             .status(404)
-            .send({statusCode : 404 ,message:enMessage.failure,Vehicle:exception.vehcilesNotFoundWithThisId})
+            .send({statusCode : 404 ,message:enMessage.failure,vehicle:exception.vehcilesNotFoundWithThisId})
         }
     const employeeVehicleMapping = await db.query(
-        `SELECT * FROM vehicle_employee_mappings WHERE vehicle_id = $1`,
-    [req.params.vehicle_id]
+        `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
+    [req.body.employee_id]
        );
     if(employeeVehicleMapping.rowCount != 0){
         return res
         .status(400)
-        .send({statusCode:400,message:enMessage.failure,VehicleMapping:exception.existVehicle})
+        .send({statusCode:400,message:enMessage.failure,employeeMapping:exception.employeeAssigned})
     }
     const newEmployeeMapping = await db.query(
         `INSERT INTO vehicle_employee_mappings (employee_id,vehicle_id,created_at,updated_at) 
@@ -30,7 +30,7 @@ const createEmployeeVehicleMapping = async (req,res) =>{
         );
       return res
       .status(201)
-      .send({ statusCode: 201,message:enMessage.success, VehicleMapping: newEmployeeMapping.rows[0] });
+      .send({ statusCode: 201,message:enMessage.success,employeeMapping: newEmployeeMapping.rows[0] });
     }catch(err){
         console.log(err);
         res.status(500).send({statusCode:500,message:enMessage.failure,Error:err});
@@ -43,11 +43,11 @@ const VehicleMapping = await db.query(`SELECT * FROM vehicle_employee_mappings O
 if (VehicleMapping.rowCount == 0) {
 return res
   .status(404)
-  .send({VehicleMapping: exception.getVehicleMapping});
+  .send({employeeMapping: exception.getVehicleMapping});
 }
 return res
     .status(200)
-    .send({ VehicleMapping: VehicleMapping.rows });
+    .send({ employeeMapping: VehicleMapping.rows });
     }catch(err){
         console.log(err);
         res.status(500).send({statusCode:500,message:enMessage.failure,Error:err});
@@ -64,7 +64,7 @@ const getVehicleEmployeeMappingById = async (req ,res) =>{
        {
         return res
         .status(404)
-        .send({statusCode:404,message:enMessage.failure,VehicleMapping:exception.vehcilesNotFoundWithThisId})
+        .send({statusCode:404,message:enMessage.failure,employeeMapping:exception.vehcilesNotFoundWithThisId})
        }
        const getVehicleEmployeeMapping = await db.query(
         `SELECT * FROM vehicle_employee_mappings WHERE vehicle_id = $1 AND id = $2 ORDER BY id;`
@@ -74,11 +74,11 @@ const getVehicleEmployeeMappingById = async (req ,res) =>{
        {
          return res
          .status(404)
-         .send({statusCode:404,message:enMessage.failure,VehicleMapping:exception.employeeVehicleMapping});
+         .send({statusCode:404,message:enMessage.failure,employeeMapping:exception.employeeVehicleMapping});
        }
        return res
        .status(200)
-       .send({ statusCode: 200, message:enMessage.success,VehicleMapping:getVehicleEmployeeMapping.rows[0] });
+       .send({ statusCode: 200, message:enMessage.success,employeeMapping:getVehicleEmployeeMapping.rows[0] });
     }  
     catch(err){
         console.log(err);
@@ -97,24 +97,23 @@ const replaceVehicleEmployeeMapping = async(req,res) =>{
         {
             res
             .status(404)
-            .send({statusCode : 404 ,message:enMessage.failure,vehicleMapping:exception.vehcilesNotFoundWithThisId})
+            .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.vehcilesNotFoundWithThisId})
         }
-        const getVehicleEmployeeMapping = await db.query(
-            `SELECT * FROM vehicle_employee_mappings WHERE vehicle_id = $1 AND id = $2 ORDER BY id;`
-           ,[req.params.vehicle_id,req.params.id]
+        const employeeVehicleMapping = await db.query(
+            `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
+        [req.body.employee_id]
            );
-           if(getVehicleEmployeeMapping.rowCount == 0 )
-           {
-             return res
-             .status(404)
-             .send({statusCode:404,message:enMessage.failure,vehicleMapping:exception.employeeVehicleMapping});
-           }
+        if(employeeVehicleMapping.rowCount != 0){
+            return res
+            .status(400)
+            .send({statusCode:400,message:enMessage.failure,employeeMapping:exception.employeeAssigned})
+        }
         const replaceQuery = `UPDATE vehicle_employee_mappings SET
                             employee_id = '${req.body.employee_id}',
                             updated_at = '${now}'
                             WHERE id  = ${req.params.id} RETURNING *`;
         const result = await db.query(replaceQuery);
-        return res.status(200).send({statusCode:200,message:enMessage.success,vehicleMapping:result.rows[0]});
+        return res.status(200).send({statusCode:200,message:enMessage.success,employeeMapping:result.rows[0]});
     }catch(err){
     console.log(err);
     return res.status(500).send({statusCode:500,message:enMessage.failure,error:err});
@@ -131,18 +130,17 @@ const updateVehicleEmployeeMapping = async(req,res) =>{
         {
             res
             .status(404)
-            .send({statusCode : 404 ,message:enMessage.failure,vehicleMapping:exception.vehcilesNotFoundWithThisId})
+            .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.vehcilesNotFoundWithThisId})
         }
-        const VehicleEmployeeMapping = await db.query(
-            `SELECT * FROM vehicle_employee_mappings WHERE vehicle_id = $1 AND id = $2 ORDER BY id;`
-           ,[req.params.vehicle_id,req.params.id]
+        const employeeVehicleMapping = await db.query(
+            `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
+        [req.body.employee_id]
            );
-           if(VehicleEmployeeMapping.rowCount == 0 )
-           {
-             return res
-             .status(404)
-             .send({statusCode:404,message:enMessage.failure,vehicleMapping:exception.employeeVehicleMapping});
-           }
+        if(employeeVehicleMapping.rowCount != 0){
+            return res
+            .status(400)
+            .send({statusCode:400,message:enMessage.failure,employeeMapping:exception.employeeAssigned})
+        }
            const updateQuery = `UPDATE vehicle_employee_mappings SET 
                 employee_id = '${req.body.employee_id}',
                 updated_at = '${now}'
@@ -150,7 +148,7 @@ const updateVehicleEmployeeMapping = async(req,res) =>{
                 const result = await db.query(updateQuery);
                 return res
                 .status(200)
-                .send({statusCode:200,message:enMessage.success,vehicleMapping:result.rows[0]});
+                .send({statusCode:200,message:enMessage.success,employeeMapping:result.rows[0]});
     }catch(err){
         console.log(err);
         return res.status(500).send({statusCode:500,message:enMessage.failure,Errpr:err});
@@ -167,7 +165,7 @@ const deleteVehicleEmployeeMapping =  async(req,res) =>{
           {
             return res
             .status(404)
-            .send({statusCode:404,message:enMessage.failure,vehicleMapping:exception.addressNotFound}
+            .send({statusCode:404,message:enMessage.failure,employeeMapping:exception.addressNotFound}
             );
           }
           const isEmployeeExist = await db.query(
@@ -177,15 +175,16 @@ const deleteVehicleEmployeeMapping =  async(req,res) =>{
           if (isEmployeeExist.rowCount == 0) {
             return resc
             .status(404)
-            .send({ status: 404,message:enMessage.failure,vehicleMapping:exception.employeeNotFound});
+            .send({ status: 404,message:enMessage.failure,employeeMapping:exception.employeeNotFound});
           }
           await db.query(
             `DELETE FROM vehicle_employee_mappings WHERE id = ${req.params.id}`
             );
-          return res.status(204).send({ status: 204,message:enMessage.success ,VehicleMapping: exception.delete});
+          return res.status(204).send({ status: 204,message:enMessage.success ,employeeMapping: exception.delete});
 
     }catch(err){
-
+        console.log(err);
+        return res.status(500).send({statusCode:500,message:enMessage.failure,Errpr:err});
     }
 }
 module.exports = {

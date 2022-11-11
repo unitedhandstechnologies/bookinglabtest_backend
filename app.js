@@ -9,6 +9,7 @@ const userRouter = require("./routes/userServiceRoute/userRouter");
 const userDetailsRouter = require("./routes/userServiceRoute/userDetailsRouter");
 const circleRouter = require("./routes/adminServiceRoute/circleRoute");
 const circlePincodeRouter = require("./routes/adminServiceRoute/circlePincodeMappingRoute");
+const vehicleCircleRouter = require("./routes/AdminServiceRoute/circleVehicleRoute");
 const employeeRouter = require("./routes/adminServiceRoute/employeeRoute");
 const testRouter = require("./routes/adminServiceRoute/testDetailRoutes");
 const slotRouter = require("./routes/adminServiceRoute/slotRoute");
@@ -49,6 +50,7 @@ app.use("/", userDetailsRouter);
 app.use("/", userAddressRoute);
 app.use("/", circleRouter);
 app.use("/", circlePincodeRouter);
+app.use("/", vehicleCircleRouter)
 app.use("/", employeeRouter);
 app.use("/",testRouter);
 app.use("/",slotRouter);

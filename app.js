@@ -16,7 +16,7 @@ const adminServiceRouter = require("./routes/adminServiceRoute/adminServiceRoute
 const userNotificationRouter = require("./routes/userServiceRoute/userNotificationRoutes");
 const userAddressRouter = require("./routes/userServiceRoute/userAddressRoute");
 const vehicleEmployeeMappingRouter = require("./routes/AdminServiceRoute/vehicleEmployeeMappingRoute");
-const userAddressRouter = require("./routes/userServiceRoute/userAddressRoute")
+const userAddressRoute = require("./routes/userServiceRoute/userAddressRoute")
 //vehicleRouter 
 const vehicleRouter = require("./routes/adminServiceRoute/vehicleRouter");
 const discountPercentageRouter = require("./routes/userServiceRoute/discountPercentageRoute");
@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //userRouters
 app.use("/", userRouter);
 app.use("/", userDetailsRouter);
-app.use("/", userAddressRouter);
+app.use("/", userAddressRoute);
 app.use("/", circleRouter);
 app.use("/", circlePincodeRouter);
 app.use("/", employeeRouter);

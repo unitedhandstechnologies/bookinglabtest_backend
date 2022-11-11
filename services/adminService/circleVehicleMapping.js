@@ -10,29 +10,44 @@ const createCircleVehicle = async (req, res) => {
       if (existCircleId.rowCount == 0) {
         return res.status(404).send({ statusCode: 404, message:"Circle Not found with this id" });
       }
- 
-        const  circleVehicles = await db.query(`SELECT * FROM vehicles WHERE id IN (${vehicle.vehicles})`);
-    for(var i = 0; i < circleVehicles.rowCount; i++){
-        await db.query(
-            `INSERT INTO circle_vehicle_maps (circle_id,vehicles,vehicle_name,vehicle_type,created_at) 
-            VALUES('${req.params.circle_id}','${circleVehicles.rows[i].id}','${circleVehicles.rows[i].vehicle_name}','${circleVehicles.rows[i].vehicle_type}','${now}')
-              RETURNING *`);
-    }
-    const circleVehicleMap = await db.query(
-        `SELECT * FROM circle_vehicle_maps WHERE  circle_id = $1;`,[req.params.circle_id]);
+     
+      const existVehicleId = await db.query(`SELECT * FROM circle_vehicle_maps WHERE vehicle_id = $1 ;`,[vehicle.vehicle_id]);
+      if (existVehicleId.rowCount != 0) {
+        return res.status(404).send({ statusCode: 404, message:"Already a vehicle exist with this id" });
+      }
 
-        return res.status(201).send({statusCode:201, vehicles:circleVehicleMap.rows});
+        const  circleVehicles = await db.query(`SELECT * FROM vehicles WHERE id IN (${vehicle.vehicle_id})`);
+      
+        const existVehicle = await db.query(
+            `SELECT * FROM vehicles WHERE id = ${vehicle.vehicle_id}`);
+            if(existVehicle.rowCount == 0)
+            {
+              return res.status(404).send({statusCode : 404 , message:"Vehicle Not Found With This Id"})
+            }
+
+        const NewVehicle = await db.query(
+            `INSERT INTO circle_vehicle_maps (circle_id,vehicle_id,created_at) 
+            VALUES('${req.params.circle_id}','${circleVehicles.rows[0].id}','${now}')
+              RETURNING *`);
+    
+        return res.status(201).send({statusCode:201, vehicles:NewVehicle.rows[0]});
     } catch (err) {
         console.log(err);
         return res.status(500).send(err);
     }
 };
 
-const getAllVehicle_ids = async (res) => {
+const getAllVehiclesInCircle = async (req,res) => {
     try {
         const getVehicle_id = await db.query(
             `SELECT * FROM circle_vehicle_maps`
         );
+
+        if(getVehicle_id.rowCount == 0)
+            {
+              return res.status(404).send({statusCode : 404 , message:"No Data Found"})
+            }
+
         return res.status(200).send({ statusCode: 200, vehicle_ids: getVehicle_id.rows });
     } catch (err) {
         console.log(err);
@@ -40,16 +55,39 @@ const getAllVehicle_ids = async (res) => {
     }
 };
 
-const getVehicle_idById = async (req, res) => {
+async function getVehicleInCircleById(req, res) {
     try {
-        const getVehicle_id = await db.query(
+        const getVehicle = await db.query(
             `SELECT * FROM circle_vehicle_maps WHERE id = $1`,
             [req.params.id]
         );
-        if (getVehicle_id.rowCount == 0) {
-            return res.status(404).send({ statusCode: 404, message:"There is no vehicle_id found with this id", });
+        if (getVehicle.rowCount == 0) {
+            return res.status(404).send({ statusCode: 404, message: "There is no vehicle found with this id", });
+        }
+        return res.status(200).send({ statusCode: 200, Vehicles: getVehicle.rows });
+    } catch (err) {
+        console.log(err);
+
+        return res.status(500).send(err);
+    }
+}
+
+const getVehiclesInCircle = async (req, res) => {
+    try {
+        const existCircleId = await db.query(`SELECT * FROM circles WHERE id = $1;`,[req.params.circle_id]);
+        if (existCircleId.rowCount == 0) {
+          return res.status(404).send({ statusCode: 404, message:"Circle Not found with this id" });
+        }
+        const getCircle = await db.query(
+            `SELECT * FROM circle_vehicle_maps WHERE circle_id = $1`,
+            [req.params.circle_id]
+        );
+                
+        if (getCircle.rowCount == 0) {
+            return res.status(404).send({ statusCode: 404, message:"There are no vehicles found in this circle", });
           }
-        return res.status(200).send({ statusCode: 200, vehicle_id: getVehicle_id.rows[0] });
+        return res.status(200).send({ statusCode: 200, Vehicles: getCircle.rows });
+   
     } catch (err) {
         console.log(err);
 
@@ -57,75 +95,58 @@ const getVehicle_idById = async (req, res) => {
     }
 };
 
-const replaceVehicle_id = async (req, res) => {
+const updateVehicleInCircle = async (req, res) => {
     try {
-        const vehicle_id = req.body;
+        const Vehicle = req.body;
         const now = new Date().toISOString();
-        const isVehicle_idExist = await db.query(
-            `SELECT * FROM circle_vehicle_maps WHERE id = $1`,
-            [req.params.id]
+        const isCircle_idExist = await db.query(
+            `SELECT * FROM circle_vehicle_maps WHERE circle_id = $1`,
+            [req.params.circle_id]
         );
 
-        if (isVehicle_idExist.rowCount == 0) {
-            return res.status(404).send({ status: 404, message:"There is no vehicle_id found with this id"
-//en.vehicle_idNotFoundWithId 
+        if (isCircle_idExist.rowCount == 0) {
+            return res.status(404).send({ status: 404, message:"There is no circle found with this id"
 });
         }
-        const updateQuery = `UPDATE circle_vehicle_maps SET 
-                            vehicle_id = '${vehicle_id.vehicle_id}',
+
+        const existVehicleIdInCircle = await db.query(`SELECT * FROM circle_vehicle_maps WHERE vehicle_id = $1 ;`,[Vehicle.vehicle_id]);
+      if (existVehicleIdInCircle.rowCount != 0) {
+        return res.status(404).send({ statusCode: 404, message:"Already a vehicle exist with this id" });
+      }
+        
+            const existVehicleId = await db.query(
+                `SELECT * FROM circle_vehicle_maps WHERE id = $1`,
+                [req.params.id]);
+            const updateVehicle_id = Vehicle.vehicle_id == null ? existVehicleId.rows[0].vehicle_id : Vehicle.vehicle_id;
+            
+        const updateQuery =`UPDATE circle_vehicle_maps SET 
+                            circle_id = '${req.params.circle_id}',
+                            vehicle_id = '${updateVehicle_id}',
                             updated_at = '${now}'
-                            WHERE id = ${req.params.id}  RETURNING *`;
+                            WHERE id = ${req.params.circle_id}  RETURNING *`;
 
-        const updatedData = await db.query(updateQuery);
-
-        return res.status(200).send({ message: " vehicle_id Updated Successfully", status:200, vehicle_id:updatedData.rows[0]});
+         const updatedData = await db.query(updateQuery);
+    
+        return res.status(200).send({ message: " vehicle_id Updated Successfully", status:200, updatedVehicle:updatedData.rows});
     } catch (err) {
         console.log(err);
         return res.status(500).send(err);
     }
 };
 
-const updateVehicle_id = async (req, res) => {
-  try {
-    let vehicle_id = req.body;
-    const now = new Date().toISOString();
-    const existVehicle_id = await db.query(
-      `SELECT * FROM circle_vehicle_maps WHERE id = $1`,
-      [req.params.id]);
 
-    if (existVehicle_id.rowCount == 0) {
-      return res.status(404).send({ status: 404, message: "Vehicle_id not found with this id"
-      // en.vehicle_idNotFound 
-    });
-    }
-
-    const updateQuery = `UPDATE circle_vehicle_maps SET 
-                         vehicle_id= '${vehicle_id.vehicle_id}',
-                         updated_at = '${now}'
-                         WHERE id = ${req.params.id}  RETURNING *`;
-
-    const result = await db.query(updateQuery);
-    return res.status(200).send({ message: " vehicle_id Updated Successfully", status:200, vehicle_id:result.rows[0]});
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send({ statusCode: 500, error: err });
-  }
-};
-
-const deleteVehicle_id = async (req, res) => {
+const deleteVehicleInCircle = async (req, res) => {
     try {
-        const isVehicle_idExist = await db.query(
+        const isCircleVehicleIdExist = await db.query(
             `SELECT * FROM circle_vehicle_maps WHERE id = $1`,
             [req.params.id]
         );
 
-        if (isVehicle_idExist.rowCount == 0) {
-            return res.status(404).send({ status: 404, message:"There is no vehicle_id found with this id"
-//en.vehicle_idNotFoundWithId 
-});
-        }
-        await db.query(`DELETE FROM mapVehicles WHERE id = ${req.params.id}`);
-        return res.status(204).send({ status: 204, message:"vehicle_id Deleted"
+        if (isCircleVehicleIdExist.rowCount == 0) {
+            return res.status(404).send({ status: 404, message:"CircleVehicleId Not Found"
+});}
+        await db.query(`DELETE FROM circle_vehicle_maps WHERE id = ${req.params.id}`);
+        return res.status(204).send({ status: 204, message:"vehicle Deleted from the circle"
             // en.customerDeleted 
         });
     } catch (err) {
@@ -136,9 +157,9 @@ const deleteVehicle_id = async (req, res) => {
 
 module.exports = {
     createCircleVehicle,
-    getAllVehicle_ids,
-    getVehicle_idById,
-    replaceVehicle_id,
-    updateVehicle_id,
-    deleteVehicle_id,
+    getAllVehiclesInCircle,
+    getVehicleInCircleById,
+    getVehiclesInCircle,
+    updateVehicleInCircle,
+    deleteVehicleInCircle,
 };

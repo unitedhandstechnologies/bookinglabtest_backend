@@ -15,10 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   circle_vehicle_maps.init({
     circle_id: DataTypes.INTEGER,
-    vehicles: DataTypes.INTEGER,
-    vehicle_name: DataTypes.STRING,
-    vehicle_type: DataTypes.STRING
-  }, {
+    vehicle_id: DataTypes.INTEGER,
+      }, {
     sequelize,
     tableName: 'circle_vehicle_maps',
     modelName: 'circle_vehicle_maps',

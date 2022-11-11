@@ -65,13 +65,14 @@ const getPincodeById = async (req, res) => {
 
 const getPincodesInCircle = async (req, res) => {
     try {
+        const existCircleId = await db.query(`SELECT * FROM circles WHERE id = $1;`,[req.params.circle_id]);
+        if (existCircleId.rowCount == 0) {
+          return res.status(404).send({ statusCode: 404, message:"Circle Not found with this id" });
+        }
         const getCircle = await db.query(
             `SELECT * FROM pincodes WHERE circle_id = $1`,
             [req.params.circle_id]
         );
-        if (getCircle.rowCount == 0) {
-            return res.status(404).send({ statusCode: 404, message:"Circle Not found with this id" });
-          }
         
         if (getCircle.rowCount == 0) {
             return res.status(404).send({ statusCode: 404, message:"There are no pincodes found in this circle", });

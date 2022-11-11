@@ -11,19 +11,17 @@ module.exports = {
       circle_id: {
         type: Sequelize.INTEGER
       },
-      vehicles: {
+      vehicle_id: {
         type: Sequelize.INTEGER
-      },
-      vehicle_name: {
-        type: Sequelize.STRING
-      },
-      vehicle_type: {
-        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
-      }      
+      } ,
+      updated_at:{
+        allowNull: true,
+        type: Sequelize.DATE
+      }     
     });
   },
   async down(queryInterface, Sequelize) {

@@ -3,17 +3,22 @@ const db = require("../../config/dbConfig");
 
 const createSample = async (req, res) => {
     try {
-        const Sample = req.body;
+        const sample = req.body;
         const now = new Date().toISOString();
         
-        const checkSample = await db.query(`SELECT * FROM samples WHERE barcode_id = '${Sample.barcode_id}'`);
+        const existOrderId = await db.query(`SELECT * FROM order_managements WHERE id = $1;`,[req.params.order_id]);
+      if (existOrderId.rowCount == 0) {
+        return res.status(404).send({ statusCode: 404, message:"Order Not found with this id" });
+      }
+
+        const checkSample = await db.query(`SELECT * FROM samples WHERE  barcode_id = '${sample.barcode_id}'`);
         if (checkSample.rowCount != 0) {
-         return res.status(400).send({ statusCode: 400, message:"Sample already exist"
+         return res.status(400).send({ statusCode: 400, message:"Barcode already exist"
         });
         }    
         const newSample = await db.query(
-          `INSERT INTO samples (barcode_id,emp_id,user_id,order_id,result_id,test_details_id,description,created_at,updated_at) 
-           VALUES ('${Sample.barcode_id}','${Sample.emp_id}','${Sample.user_id}','${Sample.order_id}','${Sample.result_id}','${Sample.test_details_id}','${Sample.description}','${now}','${now}')
+          `INSERT INTO samples (barcode_id,order_id,description,created_at,updated_at) 
+           VALUES ('${sample.barcode_id}','${req.params.order_id}','${sample.description}','${now}','${now}')
             RETURNING *`);
             return res.status(201).send({statusCode:201, sample:newSample.rows[0]});
     } catch (err) {
@@ -27,6 +32,10 @@ const getAllSample = async (req, res) => {
         const getSample = await db.query(
             `SELECT * FROM samples`
         );
+        if (getSample.rowCount == 0) {
+        
+            return res.status(404).send({ status: 404, message:"No data found"});
+          }
         return res.status(200).send({ statusCode: 200, sample: getSample.rows });
     } catch (err) {
         console.log(err);
@@ -63,11 +72,7 @@ const replaceSample = async (req, res) => {
         }
         const updateQuery = `UPDATE samples SET 
                             barcode_id = '${Sample.barcode_id}',
-                            emp_id = '${Sample.emp_id}', 
-                            user_id = '${Sample.user_id}', 
-                            order_id = '${Sample.order_id}', 
-                            result_id = '${Sample.result_id}',
-                            test_details_id = '${Sample.test_details_id}', 
+                            order_id = '${Sample.order_id}',  
                             description = '${Sample.description}', 
                             updated_at = '${now}'
                             WHERE id = ${req.params.id}  RETURNING *`;
@@ -93,15 +98,15 @@ const updateSample = async (req, res) => {
       return res.status(404).send({ status: 404, message: "Sample not found with this id"
     });
     }
+            const updateBarcode = Sample.barcode_id == null ? existSample.rows[0].barcode_id : Sample.barcode_id;
+            const updateOrder = Sample.order_id == null ? existSample.rows[0].order_id : Sample.order_id;
+            const updateDescription = Sample.description == null ? existSample.rows[0].description : Sample.description;
+
 
     const updateQuery = `UPDATE samples SET 
-                        barcode_id = '${Sample.barcode_id}',
-                        emp_id = '${Sample.emp_id}', 
-                        user_id = '${Sample.user_id}', 
-                        order_id = '${Sample.order_id}', 
-                        result_id = '${Sample.result_id}',
-                        test_details_id = '${Sample.test_details_id}', 
-                        description = '${Sample.description}', 
+                        barcode_id = '${updateBarcode}',
+                        order_id = '${updateOrder}', 
+                        description = '${updateDescription}', 
                         updated_at = '${now}'
                         WHERE id = ${req.params.id}  RETURNING *`;
 

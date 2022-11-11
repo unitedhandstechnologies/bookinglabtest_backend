@@ -19,8 +19,8 @@ const vehicleEmployeeMappingRouter = require("./routes/AdminServiceRoute/vehicle
 const userAddressRoute = require("./routes/userServiceRoute/userAddressRoute")
 //vehicleRouter 
 const vehicleRouter = require("./routes/adminServiceRoute/vehicleRouter");
-const discountPercentageRouter = require("./routes/userServiceRoute/discountPercentageRoute");
-const discountAmountRouter = require("./routes/userServiceRoute/discountAmountRoute");
+const discountPercentageRouter = require("./routes/AdminServiceRoute/discountPercentageRoute");
+const discountAmountRouter = require("./routes/AdminServiceRoute/discountAmountRoute");
 const orderRouter = require("./routes/userServiceRoute/orderRoute");
 const cors = require("cors");
 const db = require("./config/dbConfig");

@@ -113,19 +113,6 @@ const createSlot = async (req, res) => {
           }
         };
 
-          // const deletSlot = async (req, res) => {
-          //   try {
-          //     const existSlots = await db.query(`SELECT * FROM slots WHERE id= $1;`, [req.params.id]);
-          //     if (existSlots.rowCount == 0){
-          //       return res.status(404).send({message:"Slot Not Found With This Id"});
-          //     }
-          //     await db.query(`DELETE FROM slots WHERE id = ${req.params.id}`);
-          //     return res.status(204).send({message:"Slot Deleted Successfully"});
-          //   } catch (err) {
-          //     console.log(err);
-          //     return res.status(500).send({statusCode:500, error:err});
-          //   }
-          // };
 
           const deleteSlot = async (req, res) => {
             try {

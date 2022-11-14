@@ -109,6 +109,13 @@ const updateVehicleInCircle = async (req, res) => {
 });
         }
 
+        const existVehicle = await db.query(
+            `SELECT * FROM vehicles WHERE id = ${Vehicle.vehicle_id}`);
+            if(existVehicle.rowCount == 0)
+            {
+              return res.status(404).send({statusCode : 404 , message:"Vehicle Not Found With This Id"})
+            }
+
         const existVehicleIdInCircle = await db.query(`SELECT * FROM circle_vehicle_maps WHERE vehicle_id = $1 ;`,[Vehicle.vehicle_id]);
       if (existVehicleIdInCircle.rowCount != 0) {
         return res.status(404).send({ statusCode: 404, message:"Already a vehicle exist with this id" });

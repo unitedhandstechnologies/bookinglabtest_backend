@@ -121,27 +121,27 @@ const getAllVehicle  = async(req,res) =>{
                                         updated_at = '${now}'
                                         WHERE id       =  ${req.params.id} RETURNING *`;
           const  vehicleResult = await db.query(updateQuery);
-        await db.query(
-          `DELETE FROM vehicle_test_details WHERE vehicle_id = ${req.params.id}`
-        );
-        const testDetails = await db.query(
-          `SELECT * FROM test_details WHERE id IN (${vehicleRequest.test_details_id})`);
-        let vehicleList = [];
-        for(var i = 0 ; i < testDetails.rowCount; i++)
-      {
-          const result = await db.query(
-          `INSERT INTO vehicle_test_details (vehicle_id,test_details_id
-            ,test_name) VALUES ('${existVehicle.rows[0].id}',
-          '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}') RETURNING *`);
-          vehicleList.push(result.rows[0].test_details_id);
-        }
+      //   await db.query(
+      //     `DELETE FROM vehicle_test_details WHERE vehicle_id = ${req.params.id}`
+      //   );
+      //   const testDetails = await db.query(
+      //     `SELECT * FROM test_details WHERE id IN (${vehicleRequest.test_details_id})`);
+      //   let vehicleList = [];
+      //   for(var i = 0 ; i < testDetails.rowCount; i++)
+      // {
+      //     const result = await db.query(
+      //     `INSERT INTO vehicle_test_details (vehicle_id,test_details_id
+      //       ,test_name) VALUES ('${existVehicle.rows[0].id}',
+      //     '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}') RETURNING *`);
+      //     vehicleList.push(result.rows[0].test_details_id);
+      //   }
         return res
           .status(201)
           .send({
             statusCode: 200,
             message:enMessage.success,
             vehicle:vehicleResult.rows[0],
-            test_details_id:vehicleList,
+            //test_details_id:vehicleList,
           });
         } catch (err) {
           console.log(err);

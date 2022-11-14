@@ -13,11 +13,23 @@ const createEmployeeVehicleMapping = async (req,res) =>{
         {
             res
             .status(404)
-            .send({statusCode : 404 ,message:enMessage.failure,vehicle:exception.vehcilesNotFoundWithThisId})
+            .send({statusCode : 404 ,message:enMessage.failure,vehicle:exception.vehiclesNotFoundWithThisId})
         }
+
+        const existEmployee = await db.query(
+            `SELECT * FROM  employees WHERE id = $1;`,
+            [req.body.employee_id]
+        );
+    if(existEmployee.rowCount == 0)
+        {
+            res
+            .status(404)
+            .send({statusCode : 404 ,message:enMessage.failure,employee:exception.employeeNotFoundWithThisId})
+        }
+
     const employeeVehicleMapping = await db.query(
-        `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
-    [req.body.employee_id]
+        `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1 OR vehicle_id = $2;`,
+    [req.body.employee_id,req.params.vehicle_id]
        );
     if(employeeVehicleMapping.rowCount != 0){
         return res
@@ -64,7 +76,7 @@ const getVehicleEmployeeMappingById = async (req ,res) =>{
        {
         return res
         .status(404)
-        .send({statusCode:404,message:enMessage.failure,employeeMapping:exception.vehcilesNotFoundWithThisId})
+        .send({statusCode:404,message:enMessage.failure,employeeMapping:exception.vehiclesNotFoundWithThisId})
        }
        const getVehicleEmployeeMapping = await db.query(
         `SELECT * FROM vehicle_employee_mappings WHERE vehicle_id = $1 AND id = $2 ORDER BY id;`
@@ -97,11 +109,21 @@ const replaceVehicleEmployeeMapping = async(req,res) =>{
         {
             res
             .status(404)
-            .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.vehcilesNotFoundWithThisId})
+            .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.vehiclesNotFoundWithThisId})
+        }
+        const existEmployee = await db.query(
+            `SELECT * FROM  employees WHERE id = $1;`,
+            [req.body.employee_id]
+        );
+        if(existEmployee.rowCount == 0)
+        {
+            res
+            .status(404)
+            .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.employeeNotFoundWithThisId})
         }
         const employeeVehicleMapping = await db.query(
-            `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
-        [req.body.employee_id]
+            `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1 ;`,
+            [req.body.employee_id]
            );
         if(employeeVehicleMapping.rowCount != 0){
             return res
@@ -119,42 +141,43 @@ const replaceVehicleEmployeeMapping = async(req,res) =>{
     return res.status(500).send({statusCode:500,message:enMessage.failure,error:err});
     }
 };
-const updateVehicleEmployeeMapping = async(req,res) =>{
-    try{
-        const now = new Date().toISOString();
-        const existVehicle = await db.query(
-            `SELECT * FROM  vehicles WHERE id = $1;`,
-            [req.params.vehicle_id]
-        );
-        if(existVehicle.rowCount == 0)
-        {
-            res
-            .status(404)
-            .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.vehcilesNotFoundWithThisId})
-        }
-        const employeeVehicleMapping = await db.query(
-            `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
-        [req.body.employee_id]
-           );
-        if(employeeVehicleMapping.rowCount != 0){
-            return res
-            .status(400)
-            .send({statusCode:400,message:enMessage.failure,employeeMapping:exception.employeeAssigned})
-        }
-           const updateQuery = `UPDATE vehicle_employee_mappings SET 
-                employee_id = '${req.body.employee_id}',
-                updated_at = '${now}'
-                WHERE  id = ${req.params.id} RETURNING *`;
-                const result = await db.query(updateQuery);
-                return res
-                .status(200)
-                .send({statusCode:200,message:enMessage.success,employeeMapping:result.rows[0]});
-    }catch(err){
-        console.log(err);
-        return res.status(500).send({statusCode:500,message:enMessage.failure,Errpr:err});
+// const updateVehicleEmployeeMapping = async(req,res) =>{
+//     try{
+//         const now = new Date().toISOString();
+//         const existVehicle = await db.query(
+//             `SELECT * FROM  vehicles WHERE id = $1;`,
+//             [req.params.vehicle_id]
+//         );
+//         if(existVehicle.rowCount == 0)
+//         {
+//             res
+//             .status(404)
+//             .send({statusCode : 404 ,message:enMessage.failure,employeeMapping:exception.vehiclesNotFoundWithThisId})
+//         }
+//         const employeeVehicleMapping = await db.query(
+//             `SELECT * FROM vehicle_employee_mappings WHERE employee_id = $1;`,
+//         [req.body.employee_id]
+//            );
+//         if(employeeVehicleMapping.rowCount != 0){
+//             return res
+//             .status(400)
+//             .send({statusCode:400,message:enMessage.failure,employeeMapping:exception.employeeAssigned})
+//         }
+//            const updateQuery = `UPDATE vehicle_employee_mappings SET 
+//                 employee_id = '${req.body.employee_id}',
+//                 updated_at = '${now}'
+//                 WHERE  id = ${req.params.id} RETURNING *`;
+//                 const result = await db.query(updateQuery);
+//                 return res
+//                 .status(200)
+//                 .send({statusCode:200,message:enMessage.success,employeeMapping:result.rows[0]});
+//     }catch(err){
+//         console.log(err);
+//         return res.status(500).send({statusCode:500,message:enMessage.failure,Errpr:err});
 
-    }
-};
+//     }
+// };
+
 const deleteVehicleEmployeeMapping =  async(req,res) =>{
     try{
         const employee = await db.query(
@@ -192,6 +215,6 @@ module.exports = {
     getVehicleEmployeeMappingById,
     getAllVehicleEmployeeMapping,
     replaceVehicleEmployeeMapping,
-    updateVehicleEmployeeMapping,
+    //updateVehicleEmployeeMapping,
     deleteVehicleEmployeeMapping
 }

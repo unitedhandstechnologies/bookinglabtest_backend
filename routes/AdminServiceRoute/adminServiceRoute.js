@@ -7,11 +7,11 @@ const { PERMISSIONS } = require("../../constants/enums");
 
 router.post(
   "/api/admin",
-  [
-    auth,
-    checkAuth.permission.id.bind({ permissionId: PERMISSIONS.adminManagement }),
-    checkAuth.checkAuthorization,
-  ],
+  // [
+  //   auth,
+  //   checkAuth.permission.id.bind({ permissionId: PERMISSIONS.adminManagement }),
+  //   checkAuth.checkAuthorization,
+  // ],
   adminService.createAdmin
 );
 

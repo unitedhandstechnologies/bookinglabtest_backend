@@ -6,6 +6,6 @@ router.post("/api/createEmployeeMapping/vehicle/:vehicle_id",vehicleEmployeeMapp
 router.get("/api/getAllEmployeeVehicleMapping",vehicleEmployeeMapping.getAllVehicleEmployeeMapping);
 router.get("/api/vehicle/:vehicle_id/getVehicleEmployeeMappingById/:id",vehicleEmployeeMapping.getVehicleEmployeeMappingById);
 router.put("/api/vehicle/:vehicle_id/replaceVehicleEmployeeMapping/:id",vehicleEmployeeMapping.replaceVehicleEmployeeMapping);
-router.patch("/api/vehicle/:vehicle_id/updateEmployee/:id",vehicleEmployeeMapping.updateVehicleEmployeeMapping);
-router.delete("/api/vehicle/:vehicle_id/deleteEmployee/:id",vehicleEmployeeMapping.deleteVehicleEmployeeMapping);
+// router.patch("/api/vehicle/:vehicle_id/updateEmployee/:id",vehicleEmployeeMapping.updateVehicleEmployeeMapping);
+router.delete("/api/vehicle/:vehicle_id/deleteVehicleEmployeeMap/:id",vehicleEmployeeMapping.deleteVehicleEmployeeMapping);
 module.exports = router;

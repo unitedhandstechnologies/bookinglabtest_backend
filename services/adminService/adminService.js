@@ -19,7 +19,7 @@ const createAdmin = async (req, res) => {
     const hashPassword = await encoder(newAdmin.password);
 
     const admin = await db.query(
-      `INSERT INTO Admins (name,user_name,password,created_at,updated_at) VALUES('${newAdmin.name}','${newAdmin.user_name}','${hashPassword}','${now}','${now}') RETURNING *`);
+      `INSERT INTO admins (name,user_name,password,created_at,updated_at) VALUES('${newAdmin.name}','${newAdmin.user_name}','${hashPassword}','${now}','${now}') RETURNING *`);
 
     let permissionList = [];
     for (let permission of newAdmin.permissions) {
@@ -166,7 +166,7 @@ const updateAdmin = async (req, res) => {
     if (updatePassword != existAdmin.rows[0].password) {
       updatePassword = await encoder(updatePassword);
     }
-    const updateQuery = `UPDATE Admins SET 
+    const updateQuery = `UPDATE admins SET 
                              name = '${updateName}', 
                              user_name = '${updateUserName}',
                              password = '${updatePassword}',

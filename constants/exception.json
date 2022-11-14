@@ -7,7 +7,8 @@
     "accessDenied":"Access denied.No token provided",
     "invalidToken":"Invalid Token",
     "accessHaveNot":"Access Denied.You Don't have permission!",
-    "vehcilesNotFoundWithThisId":"vehcile Not Found With This Id",
+    "vehiclesNotFoundWithThisId":"vehicle Not Found With This Id",
+    "employeeNotFoundWithThisId":"Employee Not Found With This Id",
     "existVehicle":"Already employee allocate This id ",
     "delete":"Deleted",
     "addressNotFound":"Address Not Found With This Id ",
@@ -18,5 +19,7 @@
     "employeeExist":"Employee Already Exist",
     "getVehicleMapping":"Vehicle Employee Mapping Not",
     "vehicleAlreadyExist":"This Vehicle Already exist",
-    "employeeAssigned":"Already Employee Assigned this Vehicle Id  please Assign Another Vehicle Id"
+    "employeeAssigned":"Employee Already Assigned to the Vehicle, Please Assign Another",
+    "idNotFound":"Id does not found",
+    "dataNotFound":"Table is empty"
 }

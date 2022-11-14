@@ -29,6 +29,10 @@ const notificationRouter = require("./routes/adminServiceRoute/notificationRoute
 const sampleRouter = require("./routes/AdminServiceRoute/sampleRoute");
 const resultRouter = require("./routes/AdminServiceRoute/resultRoute");
 
+//OrderSerViceRouters
+const orderServiceRouter = require("./routes/OrderServiceRoute/orderServiceRoute");
+
+
 db.connect();
 
 const app = express();
@@ -66,6 +70,8 @@ app.use("/",orderRouter);
 app.use("/",userAddressRouter);
 app.use("/",sampleRouter);
 app.use("/",resultRouter);
+//OrderService
+app.use("/",orderServiceRouter);
 
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  

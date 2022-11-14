@@ -1,5 +1,12 @@
 const PERMISSIONS = {
-    adminManagement: 1
+    adminManagement: 1,
+    userManagement: 2
 };
 
-module.exports = {PERMISSIONS}
+const ORDERSTATUS = {
+    pending: 1,
+    completed: 2,
+    canceled: 3
+};
+
+module.exports = {PERMISSIONS,ORDERSTATUS}

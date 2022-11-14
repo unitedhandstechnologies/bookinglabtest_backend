@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       time: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       created_at: {
         allowNull: false,

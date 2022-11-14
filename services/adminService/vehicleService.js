@@ -6,6 +6,11 @@ const createVehicle = async(req,res) => {
   try{
       const now  = new Date().toISOString();
       const newVehicle = req.body;
+      const checkVehicle= await db.query(`SELECT * FROM vehicles WHERE vehicle_number = '${newVehicle.vehicle_number}'`);
+      if (checkVehicle.rowCount != 0) {
+       return res.status(400).send({ statusCode: 400, message:exception.failure,vehicle:exception.vehicleAlreadyExist 
+      });
+      }  
       const vehicle = await db.query(`INSERT INTO vehicles(vehicle_number,vehicle_name,vehicle_type,description,created_at,updated_at) VALUES ('${newVehicle.vehicle_number}','${newVehicle.vehicle_name}','${newVehicle.vehicle_type}','${newVehicle.description}','${now}','${now}') RETURNING *`);
       const testDetails = await db.query(
           `SELECT * FROM test_details WHERE id IN (${newVehicle.test_details_id})`);

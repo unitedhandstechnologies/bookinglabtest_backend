@@ -1,5 +1,10 @@
 const db = require("../../config/dbConfig");
 const {ORDERSTATUS} = require("../../constants/enums");
+const date = new Date();
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+let currentDate = `${day}-${month}-${year}`;
 
 const getAvailableSlots = async (req, res) => {
     try {
@@ -24,9 +29,10 @@ const getAvailableSlots = async (req, res) => {
         if(vehiclesOfMatchedToAllTest.length == 0){
             return res.status(404).send("There is No Vehicle Available to take this Tests");
         }
-        
-        let unAvailableSlots = [0];                                          
+        let vehicle_id;
+        let availableSlotList = [];
             for(var i = 0; i < vehiclesOfMatchedToAllTest.length; i++){
+                let unAvailableSlots = [0];                                          
                 const checkSlotAvailability = await db.query(`SELECT * FROM orders WHERE circle_id = ${req.params.circle_id} 
                                                               AND vehicle_id = ${vehiclesOfMatchedToAllTest[i]} 
                                                               AND status_id = ${ORDERSTATUS.pending}`);
@@ -34,11 +40,25 @@ const getAvailableSlots = async (req, res) => {
                     checkSlotAvailability.rows.forEach(order => {
                           unAvailableSlots.push(order.slot_id);
                     });
+                const availableSlots = await db.query(`SELECT * FROM slots WHERE id NOT IN (${unAvailableSlots}) AND date > '${currentDate}'`);
+                unAvailableSlots = [];
+                if(availableSlotList.length == 0){
+                    vehicle_id = checkSlotAvailability.rows[0].vehicle_id;
+                    availableSlotList = availableSlots.rowCount == 0 ? [0] : availableSlots.rows;
+                }
+                if(availableSlots.rowCount >= availableSlotList.length){
+                    vehicle_id = checkSlotAvailability.rows[0].vehicle_id;
+                    availableSlotList = [];
+                    availableSlotList = availableSlots.rows;
+                }
+                }
+                else{
+                    vehicle_id = vehiclesOfMatchedToAllTest[i];
+                    const availableSlots = await db.query(`SELECT * FROM slots WHERE id NOT IN (${unAvailableSlots}) AND date > '${currentDate}'`);
+                    return res.status(200).send({availableSlots:availableSlots.rows, availableVehicleId:vehicle_id});
                 }
             }
-            console.log(unAvailableSlots);
-        const availableSlots = await db.query(`SELECT * FROM slots WHERE id NOT IN (${unAvailableSlots})`);
-        return res.status(200).send({availableSlots:availableSlots.rows, availableVehicles:vehiclesOfMatchedToAllTest });
+        return res.status(200).send({availableSlots:availableSlotList, availableVehicleId:vehicle_id });
     } catch (err) {
         console.log(err);
         return res.status(500).send(err);
@@ -49,20 +69,14 @@ const createOrder = async(req,res) => {
     try{
         const now = new Date().toISOString();
         const newOrderReq = req.body;
-        let availableVehicleOfChoosedSlot = [];
-        for(var i = 0; i < newOrderReq.availableVehicles.length; i++) {
-            const checkSlot = await db.query(`SELECT * FROM orders WHERE circle_id = ${req.params.circle_id} 
-                                            AND vehicle_id = ${newOrderReq.availableVehicles[i]} 
-                                            AND slot_id = ${newOrderReq.slot_id} AND status_id = ${ORDERSTATUS.pending}`);
-            if(checkSlot.rowCount == 0){
-                availableVehicleOfChoosedSlot.push(newOrderReq.availableVehicles[i]); 
-            }
-        }
-        if(availableVehicleOfChoosedSlot.length == 0){
+        const checkSlot = await db.query(`SELECT * FROM orders WHERE circle_id = ${req.params.circle_id} 
+                                        AND vehicle_id = ${newOrderReq.vehicle_id} 
+                                        AND slot_id = ${newOrderReq.slot_id} AND status_id = ${ORDERSTATUS.pending}`);
+        if(checkSlot.rowCount != 0){
             return res.status(400).send("Sorry,You Missed This Slot Just Now,Please Choose Another Available Slots");
         }
         const newOrder = await db.query(`INSERT INTO orders (user_id,circle_id,test_details,slot_id,vehicle_id,status_id,created_at,updated_at)
-                                          VALUES(${req.params.user_id},${req.params.circle_id},'{${newOrderReq.test_details}}',${newOrderReq.slot_id},${availableVehicleOfChoosedSlot[0]},${ORDERSTATUS.pending},'${now}','${now}') RETURNING *`);
+                                          VALUES(${req.params.user_id},${req.params.circle_id},'{${newOrderReq.test_details}}',${newOrderReq.slot_id},${newOrderReq.vehicle_id},${ORDERSTATUS.pending},'${now}','${now}') RETURNING *`);
         return res.status(201).send(newOrder.rows[0]);
     }catch(err){
         console.log(err);

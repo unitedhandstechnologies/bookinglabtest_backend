@@ -30,10 +30,11 @@ const createVehicle = async(req,res) => {
   return res.status(500).send({statusCode:500,message:enMessage.failure,error:err});
   }
 };
+
 const getAllVehicle  = async(req,res) =>{
     try {
-        const isVehcilesExist = req.query;
-        if (isVehcilesExist.rowCount == 0){
+        const isVehicleExist = req.query;
+        if (isVehicleExist.rowCount == 0){
             return res
             .status(400)
             .send({statusCode:400,message:enMessage.failure,vehicle:exception.vehiclesNotFoundWithThisId});
@@ -47,6 +48,7 @@ const getAllVehicle  = async(req,res) =>{
         return res.status(500).send({ statusCode: 500,message:enMessage.failure,error: err });
       }
     };
+
     const getVehicleById = async (req,res) =>{
         try{
             const vehicles = await db.query(

@@ -72,7 +72,7 @@ app.use("/",sampleRouter);
 app.use("/",resultRouter);
 //OrderService
 app.use("/",orderServiceRouter);
-
+app.use("/",adminServiceRouter);
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development  
     res.locals.message = err.message;  

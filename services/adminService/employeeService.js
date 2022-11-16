@@ -1,4 +1,9 @@
 const db = require("../../config/dbConfig");
+const dotenv = require('dotenv').config();
+const jwt = require("jsonwebtoken");
+const jwt_private_key = process.env.JWT_PRIVATE_KEY;
+const { encoder, decoder } = require("../../utils/encoder&decoder");
+
 //const exception = require("../../../constants/exception.json");
 
 const createEmployee = async (req, res) => {
@@ -12,9 +17,10 @@ const createEmployee = async (req, res) => {
            // employee: exception.existEmployee 
         });
         }    
+        const hashPassword = await encoder(Employee.password);
         const newEmployee = await db.query(
-          `INSERT INTO employees (employee_name,qualification,age,mobile_number,email,address,work_status,created_at,updated_at) 
-           VALUES ('${Employee.employee_name}','${Employee.qualification}','${Employee.age}','${Employee.mobile_number}','${Employee.email}','${Employee.address}','${Employee.work_status}','${now}','${now}')
+          `INSERT INTO employees (user_name,password,employee_name,qualification,age,mobile_number,email,address,work_status,created_at,updated_at) 
+           VALUES ('${Employee.user_name}','${hashPassword}','${Employee.employee_name}','${Employee.qualification}','${Employee.age}','${Employee.mobile_number}','${Employee.email}','${Employee.address}','${Employee.work_status}','${now}','${now}')
             RETURNING *`);
             return res.status(201).send({statusCode:201, Employee:newEmployee.rows[0]});
     } catch (err) {
@@ -22,6 +28,32 @@ const createEmployee = async (req, res) => {
         return res.status(500).send(err);
     }
 };
+
+const loginEmployee = async (req, res) => {
+    const employee = req.body;
+    try {
+      const existEmployee = await db.query(
+        `SELECT * FROM employees WHERE user_name =  $1;`,
+        [employee.user_name]
+      );
+      if (existEmployee.rowCount == 0)
+        return res.status(404).send({ statusCode: 404, message: exception.invalid });
+  
+      const hashPassword = existEmployee.rows[0].password;
+      const decryptedPassword = await decoder(hashPassword);
+      if (decryptedPassword != employee.password)
+        return res.status(400).send({ statusCode: 400, message: exception.invalid });
+        // existEmployee.rows[0].password = decryptedPassword;
+        const token = jwt.sign({ id: existEmployee.rows[0].id},jwt_private_key);
+      return res.send({
+        data: existEmployee.rows[0],
+        token: token
+      });    
+      
+    } catch (err) {
+      res.status(500).send({ statusCode: 500, error: err });
+    }
+  };
 
 const getAllEmployees = async (req,res) => {
     try {
@@ -32,6 +64,9 @@ const getAllEmployees = async (req,res) => {
             return res.status(404).send({ status: 404, message:"No data found"
 //en.pincodeNotFoundWithId 
 })}
+for (var i = 0; i < getEmployee.rowCount; i++){
+  getEmployee.rows[i].password = await decoder(getEmployee.rows[i].password);
+}
         return res.status(200).send({ statusCode: 200, Employees: getEmployee.rows });
     } catch (err) {
         console.log(err);
@@ -50,6 +85,8 @@ const getEmployeeById = async (req, res) => {
 //en.EmployeeNotFoundWithId 
 });
         }
+        getEmployee.rows[0].password = await decoder(getEmployee.rows[0].password);
+
         return res.status(200).send({ statusCode: 200, Employee: getEmployee.rows[0] });
     } catch (err) {
         console.log(err);
@@ -157,6 +194,7 @@ const deleteEmployee = async (req, res) => {
 
 module.exports = {
     createEmployee,
+    loginEmployee,
     getAllEmployees,
     getEmployeeById,
     replaceEmployee,

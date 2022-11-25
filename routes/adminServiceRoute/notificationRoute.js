@@ -3,7 +3,7 @@ const express = require("express");
  const notificationService = require("../../services/adminService/notificationService");
 
  router.post(
-    "/api/createNotification",
+   "/api/createNotification",
     notificationService.createNewNotification
  );
  router.get(

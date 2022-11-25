@@ -12,6 +12,13 @@ module.exports = {
       notification: {
         type: Sequelize.STRING
       },
+      order_id:{
+        allowNull: true,
+        type:Sequelize.INTEGER
+      },
+      message: {
+        type: Sequelize.STRING
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

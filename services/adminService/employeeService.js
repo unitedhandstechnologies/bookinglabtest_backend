@@ -3,6 +3,7 @@ const dotenv = require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const jwt_private_key = process.env.JWT_PRIVATE_KEY;
 const { encoder, decoder } = require("../../utils/encoder&decoder");
+const notificationService = require("../../services/adminService/notificationService");
 
 //const exception = require("../../../constants/exception.json");
 
@@ -23,7 +24,7 @@ const createEmployee = async (req, res) => {
            VALUES ('${Employee.user_name}','${hashPassword}','${Employee.employee_name}','${Employee.qualification}','${Employee.age}','${Employee.mobile_number}','${Employee.email}','${Employee.address}','${Employee.work_status}','${now}','${now}')
             RETURNING *`);
             return res.status(201).send({statusCode:201, Employee:newEmployee.rows[0]});
-    } catch (err) {
+        } catch (err) {
         console.log(err);
         return res.status(500).send(err);
     }

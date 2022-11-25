@@ -1,25 +1,28 @@
 const db = require("../../config/dbConfig");
 // const exception = require("../../constants/exception.json");
 
-const createNewNotification = async (req, res) => {
-  try {
-      const Notification = req.body;
+const createNewNotification = async (notification) => {
+//   try {
+    //   const Notification = req.body;
       const now = new Date().toISOString();
-      
-      const checkNotification = await db.query(`SELECT * FROM notifications WHERE notification = '${Notification.notification}'`);
-      if (checkNotification.rowCount != 0) {
-       return res.status(400).send({ statusCode: 400, message:"Notification with this name already exist" 
-      });
-      }    
-      const newNotification = await db.query(
+    //   const existOrderId = await db.query(`SELECT * FROM orders WHERE id = $1;`,[req.params.order_id]);
+    //   if (existOrderId.rowCount == 0) {
+    //     return res.status(404).send({ statusCode: 404, message:"Order Not found with this id" });
+    //   }
+    //   const checkNotification = await db.query(`SELECT * FROM notifications WHERE notification = '${Notification.notification}'`);
+    //   if (checkNotification.rowCount != 0) {
+    //    return res.status(400).send({ statusCode: 400, message:"Notification with this Id already exist" 
+    //   });
+    //   }    
+       await db.query(
         `INSERT INTO notifications (notification,created_at) 
-         VALUES ('${Notification.notification}','${now}')
+         VALUES ('${notification}','${now}')
           RETURNING *`);
-          return res.status(201).send({statusCode:201, Notification:newNotification.rows[0]});
-  } catch (err) {
-      console.log(err);
-      return res.status(500).send(err);
-  }
+        //   return res.status(201).send({statusCode:201, Notification:newNotification.rows[0]});
+//   } catch (err) {
+//       console.log(err);
+//       return res.status(500).send(err);
+//   }
 };
         const getAllNotification = async (req, res) => {
           try {

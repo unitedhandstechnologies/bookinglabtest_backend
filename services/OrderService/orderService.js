@@ -1,5 +1,6 @@
 const db = require("../../config/dbConfig");
 const {ORDERSTATUS} = require("../../constants/enums");
+const notificationService = require("../../services/adminService/notificationService");
 const date = new Date();
 let day = date.getDate();
 let month = date.getMonth() + 1;
@@ -77,6 +78,9 @@ const createOrder = async(req,res) => {
         }
         const newOrder = await db.query(`INSERT INTO orders (user_id,circle_id,test_details,slot_id,vehicle_id,status_id,created_at,updated_at)
                                           VALUES(${req.params.user_id},${req.params.circle_id},'{${newOrderReq.test_details}}',${newOrderReq.slot_id},${newOrderReq.vehicle_id},${ORDERSTATUS.pending},'${now}','${now}') RETURNING *`);
+        if (newOrder != null){
+            await notificationService.createNewNotification(`Received New Order, Order No:${newOrder.rows[0].id}`);
+        }
         return res.status(201).send(newOrder.rows[0]);
     }catch(err){
         console.log(err);

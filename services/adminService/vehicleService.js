@@ -21,7 +21,7 @@ const createVehicle = async(req,res) => {
               `INSERT INTO vehicle_test_details (vehicle_id,test_details_id,test_name) VALUES ('${vehicle.rows[0].id}',
               '${testDetails.rows[i].id}','${testDetails.rows[i].test_name}') RETURNING *`);
           vehicleList.push(result.rows[0].test_details_id);
-          }   
+          }  
       return res.status(201).send({statusCode:201,message:enMessage.success,vehicle:vehicle.rows[0], test_details_id:vehicleList});
   }
   catch (err) 
